@@ -1,0 +1,18 @@
+additionalProperties:
+  formFields:
+    - default: 8080
+      edit: true
+      envKey: PANEL_APP_PORT_HTTP
+      labelEn: ApplicationPort
+      labelZh: 应用端口
+      required: true
+      rule: paramPort
+      type: number
+    - default: 9090
+      edit: true
+      envKey: PANEL_APP_PORT_METRICS
+      labelEn: MetricsPort(DON'T OPEN IN FIREWALL)
+      labelZh: 指标端口(不要在防火墙中打开)
+      required: true
+      rule: paramPort
+      type: number

@@ -1,0 +1,13 @@
+additionalProperties:
+  key: headscale-server
+  name: Headscale-Server
+  tags:
+    - Tool
+  shortDescZh: Headscale 是一个自托管的开源 Tailscale 控制服务器实现。
+  shortDescEn: Headscale aims to implement a self-hosted, open source alternative to the Tailscale control server.
+  type: tool
+  crossVersionUpdate: true
+  limit: 1
+  website: https://headscale.net/
+  github: https://github.com/juanfont/headscale
+  document: https://headscale.net/
