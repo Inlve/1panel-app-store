@@ -1,0 +1,13 @@
+additionalProperties:
+  key: headscale-admin
+  name: Headscale-Admin
+  tags:
+    - Tool
+  shortDescZh: 用于管理 juanfont/headscale 的 Web 界面。
+  shortDescEn: Admin Web Interface for juanfont/headscale.
+  type: tool
+  crossVersionUpdate: true
+  limit: 1
+  website: https://github.com/GoodiesHQ/headscale-admin
+  github: https://github.com/GoodiesHQ/headscale-admin
+  document: https://github.com/GoodiesHQ/headscale-admin
