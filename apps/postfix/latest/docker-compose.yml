@@ -1,0 +1,19 @@
+services:
+  postfix:
+    container_name: ${CONTAINER_NAME}
+    restart: always
+    networks:
+      - 1panel-network
+    ports:
+      - "${PANEL_APP_PORT_SMTP}:25"
+    image: ghcr.io/inlve/postfix:latest
+    volumes:
+      - "./data/config:/etc/postfix"
+      - "./data/data:/var/spool/postfix"
+      - "./data/ssl:/etc/ssl"
+    labels:  
+      createdBy: "Apps"
+
+networks:  
+  1panel-network:  
+    external: true

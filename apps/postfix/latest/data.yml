@@ -1,0 +1,10 @@
+additionalProperties:
+  formFields:
+    - default: 25
+      edit: true
+      envKey: PANEL_APP_PORT_SMTP
+      labelEn: SMTPPort
+      labelZh: SMTP端口
+      required: true
+      rule: paramPort
+      type: number

@@ -1,0 +1,13 @@
+additionalProperties:
+  key: postfix
+  name: Postfix
+  tags:
+    - Tool
+  shortDescZh: 用于管理邮件服务。
+  shortDescEn: Manage email service.
+  type: tool
+  crossVersionUpdate: true
+  limit: 1
+  website: https://www.postfix.org/
+  github: https://www.postfix.org/
+  document: https://www.postfix.org/
