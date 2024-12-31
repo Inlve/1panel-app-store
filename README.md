@@ -9,48 +9,73 @@
 REPO_URL="https://github.com/Inlve/1panel-app-store.git"
 BRANCH="main"
 LOCAL_DIR="app-store"
-DEST_DIR="/opt/1panel/resource/apps/local"
-PREFIX="1panel_"
+SOURCE_DIR="$LOCAL_DIR/apps"
+TARGET_DIR="/opt/1panel/resource/apps/local"
 
-# 创建临时目录用于克隆
-mkdir -p "$LOCAL_DIR"
+# 克隆仓库函数
+clone_repo() {
+    echo "正在克隆仓库..."
+    git clone -b "$BRANCH" "$REPO_URL" "$LOCAL_DIR" || {
+        echo "克隆失败，请检查网络或仓库地址。"
+        exit 1
+    }
+    echo "克隆完成。"
+}
 
-# 克隆仓库指定分支到本地目录
-if git clone --depth 1 --branch "$BRANCH" "$REPO_URL" "$LOCAL_DIR"; then
-    echo "克隆仓库成功。"
-else
-    echo "克隆仓库失败。"
-    exit 1
-fi
+# 对比更新函数
+incremental_update() {
+    echo "开始增量更新..."
 
-# 清理目标目录中已有的 app_ 前缀的文件夹
-if [ -d "$DEST_DIR" ]; then
-    echo "清理已有的 $PREFIX 文件夹..."
-    find "$DEST_DIR" -type d -name "$PREFIX*" -exec rm -rf {} +
-fi
+    # 创建目标目录（如果不存在）
+    mkdir -p "$TARGET_DIR"
 
-# 确保目标目录存在
-mkdir -p "$DEST_DIR"
-
-# 移动并重命名子目录
-if [ -d "$LOCAL_DIR/apps" ]; then
-    for subdir in "$LOCAL_DIR/apps"/*; do
-        if [ -d "$subdir" ]; then
-            subdir_name=$(basename "$subdir")
-            mv "$subdir" "$DEST_DIR/$PREFIX$subdir_name"
+    # 删除在目标目录中存在但不在源目录中的文件夹
+    for target_subdir in "$TARGET_DIR"/*; do
+        if [ -d "$target_subdir" ]; then
+            subdir_name=$(basename "$target_subdir")
+            if [ ! -d "$SOURCE_DIR/$subdir_name" ]; then
+                echo "删除旧的文件夹：$subdir_name"
+                rm -rf "$target_subdir"
+            fi
         fi
     done
-    echo "子目录已成功移动并重命名。"
-else
-    echo "$LOCAL_DIR/apps 目录不存在。"
-    exit 1
-fi
+
+    # 添加或更新文件夹
+    for source_subdir in "$SOURCE_DIR"/*; do
+        if [ -d "$source_subdir" ]; then
+            subdir_name=$(basename "$source_subdir")
+            target_subdir="$TARGET_DIR/$subdir_name"
+            if [ ! -d "$target_subdir" ]; then
+                echo "添加新文件夹：$subdir_name"
+                cp -r "$source_subdir" "$target_subdir"
+            else
+                echo "更新文件夹：$subdir_name"
+                rsync -a --delete "$source_subdir/" "$target_subdir/"
+            fi
+        fi
+    done
+
+    echo "增量更新完成。"
+}
+
+# 删除本地目录函数
+delete_local_dir() {
+    echo "删除本地目录 $LOCAL_DIR..."
+    rm -rf "$LOCAL_DIR"
+    echo "本地目录已删除。"
+}
+
+# 执行流程
+echo "开始执行脚本..."
+
+# 克隆仓库
+clone_repo
+
+# 进行增量更新
+incremental_update
 
 # 删除本地目录
-rm -rf "$LOCAL_DIR"
+delete_local_dir
 
-echo "本地目录 $LOCAL_DIR 已删除。"
-
-# 提示下次更新的说明
-echo "脚本完成。下次更新时将自动清理并重新克隆和移动。"
+echo "脚本执行完成。"
 ```
